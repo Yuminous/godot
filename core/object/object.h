@@ -61,7 +61,7 @@ enum PropertyHint {
 	PROPERTY_HINT_RANGE, ///< hint_text = "min,max[,step][,or_greater][,or_lesser][,noslider][,radians][,degrees][,exp][,suffix:<keyword>] range.
 	PROPERTY_HINT_ENUM, ///< hint_text= "val1,val2,val3,etc"
 	PROPERTY_HINT_ENUM_SUGGESTION, ///< hint_text= "val1,val2,val3,etc"
-	PROPERTY_HINT_EXP_EASING, /// exponential easing function (Math::ease) use "attenuation" hint string to revert (flip h), "full" to also include in/out. (ie: "attenuation,inout")
+	PROPERTY_HINT_EXP_EASING, /// exponential easing function (Math::ease) use "attenuation" hint string to revert (flip h), "positive_only" to exclude in-out and out-in. (ie: "attenuation,positive_only")
 	PROPERTY_HINT_LENGTH, ///< hint_text= "length" (as integer)
 	PROPERTY_HINT_KEY_ACCEL, ///< hint_text= "length" (as integer)
 	PROPERTY_HINT_FLAGS, ///< hint_text= "flag1,flag2,etc" (as bit flags)

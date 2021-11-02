@@ -3471,7 +3471,8 @@ void AnimationTrackEditor::commit_insert_queue() {
 		}
 	}
 
-	if (bool(EDITOR_DEF("editors/animation/confirm_insert_track", true)) && num_tracks > 0) {
+	// Skip the confirmation dialog if the user holds Shift while clicking the key icon.
+	if (!Input::get_singleton()->is_key_pressed(KEY_SHIFT) && num_tracks > 0) {
 		// Potentially a new key, does not exist.
 		if (num_tracks == 1) {
 			// TRANSLATORS: %s will be replaced by a phrase describing the target of track.

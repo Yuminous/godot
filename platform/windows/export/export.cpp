@@ -71,6 +71,10 @@ void register_windows_exporter() {
 static Error fixup_embedded_pck(const String &p_path, int64_t p_embedded_start, int64_t p_embedded_size) {
 	// Patch the header of the "pck" section in the PE file so that it corresponds to the embedded data
 
+	if (p_embedded_size + p_embedded_start >= 0x100000000) { // Check for total executable size
+		ERR_FAIL_V_MSG(ERR_INVALID_DATA, "Windows executables cannot be >= 4 GiB.");
+	}
+
 	FileAccess *f = FileAccess::open(p_path, FileAccess::READ_WRITE);
 	if (!f) {
 		return ERR_CANT_OPEN;
@@ -85,6 +89,7 @@ static Error fixup_embedded_pck(const String &p_path, int64_t p_embedded_start, 
 		uint32_t magic = f->get_32();
 		if (magic != 0x00004550) {
 			f->close();
+			memdelete(f);
 			return ERR_FILE_CORRUPT;
 		}
 	}
@@ -135,6 +140,7 @@ static Error fixup_embedded_pck(const String &p_path, int64_t p_embedded_start, 
 	}
 
 	f->close();
+	memdelete(f);
 
 	return found ? OK : ERR_FILE_CORRUPT;
 }

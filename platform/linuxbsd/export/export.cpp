@@ -73,6 +73,7 @@ static Error fixup_embedded_pck(const String &p_path, int64_t p_embedded_start, 
 		uint32_t magic = f->get_32();
 		if (magic != 0x464c457f) { // 0x7F + "ELF"
 			f->close();
+			memdelete(f);
 			return ERR_FILE_CORRUPT;
 		}
 	}
@@ -83,6 +84,7 @@ static Error fixup_embedded_pck(const String &p_path, int64_t p_embedded_start, 
 
 	if (bits == 32 && p_embedded_size >= 0x100000000) {
 		f->close();
+		memdelete(f);
 		ERR_FAIL_V_MSG(ERR_INVALID_DATA, "32-bit executables cannot have embedded data >= 4 GiB.");
 	}
 
@@ -128,6 +130,7 @@ static Error fixup_embedded_pck(const String &p_path, int64_t p_embedded_start, 
 		strings = (uint8_t *)memalloc(string_data_size);
 		if (!strings) {
 			f->close();
+			memdelete(f);
 			return ERR_OUT_OF_MEMORY;
 		}
 		f->get_buffer(strings, string_data_size);
@@ -161,6 +164,7 @@ static Error fixup_embedded_pck(const String &p_path, int64_t p_embedded_start, 
 
 	memfree(strings);
 	f->close();
+	memdelete(f);
 
 	return found ? OK : ERR_FILE_CORRUPT;
 }

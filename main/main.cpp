@@ -91,6 +91,10 @@
 #endif
 #endif
 
+#if defined(STEAMAPI_ENABLED)
+#include "main/steam_tracker.h"
+#endif
+
 #include "modules/modules_enabled.gen.h" // For mono.
 
 /* Static members */
@@ -111,6 +115,10 @@ static ZipArchive *zip_packed_data = nullptr;
 #endif
 static FileAccessNetworkClient *file_access_network_client = nullptr;
 static MessageQueue *message_queue = nullptr;
+
+#if defined(STEAMAPI_ENABLED)
+static SteamTracker *steam_tracker = nullptr;
+#endif
 
 // Initialized in setup2()
 static AudioServer *audio_server = nullptr;
@@ -1478,6 +1486,12 @@ Error Main::setup(const char *execpath, int argc, char *argv[], bool p_second_ph
 
 	message_queue = memnew(MessageQueue);
 
+#if defined(STEAMAPI_ENABLED)
+	if (editor || project_manager) {
+		steam_tracker = memnew(SteamTracker);
+	}
+#endif
+
 	if (p_second_phase) {
 		return setup2();
 	}
@@ -1534,6 +1548,13 @@ error:
 	if (message_queue) {
 		memdelete(message_queue);
 	}
+
+#if defined(STEAMAPI_ENABLED)
+	if (steam_tracker) {
+		memdelete(steam_tracker);
+	}
+#endif
+
 	OS::get_singleton()->finalize_core();
 	locale = String();
 
@@ -2885,6 +2906,12 @@ void Main::cleanup(bool p_force) {
 	// Now should be safe to delete MessageQueue (famous last words).
 	message_queue->flush();
 	memdelete(message_queue);
+
+#if defined(STEAMAPI_ENABLED)
+	if (steam_tracker) {
+		memdelete(steam_tracker);
+	}
+#endif
 
 	unregister_core_driver_types();
 	unregister_core_types();

@@ -74,10 +74,13 @@ class MaterialEditor : public Control {
 	void _button_pressed(Node *p_button);
 	bool first_enter;
 
-protected:
-	void _notification(int p_what);
+	Vector2 rot = Vector2();
+	Node3D *rotation;
 
-	static void _bind_methods();
+protected:
+	void gui_input(const Ref<InputEvent> &p_event) override;
+	void _notification(int p_what);
+	void _update_rotation();
 
 public:
 	void edit(Ref<Material> p_material, const Ref<Environment> &p_env);

@@ -36,6 +36,22 @@
 #include "scene/resources/particles_material.h"
 #include "scene/resources/sky_material.h"
 
+void MaterialEditor::gui_input(const Ref<InputEvent> &p_event) {
+	ERR_FAIL_COND(p_event.is_null());
+
+	Ref<InputEventMouseMotion> mm = p_event;
+	if (mm.is_valid() && (mm->get_button_mask() & MouseButton::MASK_LEFT) != MouseButton::NONE) {
+		rot.x -= mm->get_relative().y * 0.01;
+		rot.y -= mm->get_relative().x * 0.01;
+		if (rot.x < -Math_PI / 2) {
+			rot.x = -Math_PI / 2;
+		} else if (rot.x > Math_PI / 2) {
+			rot.x = Math_PI / 2;
+		}
+		_update_rotation();
+	}
+}
+
 void MaterialEditor::_notification(int p_what) {
 	if (p_what == NOTIFICATION_READY) {
 		//get_scene()->connect("node_removed",this,"_node_removed");
@@ -65,6 +81,13 @@ void MaterialEditor::_notification(int p_what) {
 	}
 }
 
+void MaterialEditor::_update_rotation() {
+	Transform3D t;
+	t.basis.rotate(Vector3(0, 1, 0), -rot.y);
+	t.basis.rotate(Vector3(1, 0, 0), -rot.x);
+	rotation->set_transform(t);
+}
+
 void MaterialEditor::edit(Ref<Material> p_material, const Ref<Environment> &p_env) {
 	material = p_material;
 	camera->set_environment(p_env);
@@ -90,6 +113,13 @@ void MaterialEditor::edit(Ref<Material> p_material, const Ref<Environment> &p_en
 	} else {
 		hide();
 	}
+
+	rot.x = Math::deg2rad(-15.0);
+	rot.y = Math::deg2rad(30.0);
+	_update_rotation();
+
+	box_instance->set_transform(Transform3D() * 0.25);
+	sphere_instance->set_transform(Transform3D() * 0.375);
 }
 
 void MaterialEditor::_button_pressed(Node *p_button) {
@@ -116,9 +146,6 @@ void MaterialEditor::_button_pressed(Node *p_button) {
 		sphere_switch->set_pressed(true);
 		EditorSettings::get_singleton()->set_project_metadata("inspector_options", "material_preview_on_sphere", true);
 	}
-}
-
-void MaterialEditor::_bind_methods() {
 }
 
 MaterialEditor::MaterialEditor() {
@@ -151,7 +178,7 @@ MaterialEditor::MaterialEditor() {
 	viewport->set_msaa(Viewport::MSAA_4X);
 
 	camera = memnew(Camera3D);
-	camera->set_transform(Transform3D(Basis(), Vector3(0, 0, 3)));
+	camera->set_transform(Transform3D(Basis(), Vector3(0, 0, 1.1)));
 	camera->set_perspective(45, 0.1, 10);
 	camera->make_current();
 	viewport->add_child(camera);
@@ -165,11 +192,14 @@ MaterialEditor::MaterialEditor() {
 	light2->set_color(Color(0.7, 0.7, 0.7));
 	viewport->add_child(light2);
 
+	rotation = memnew(Node3D);
+	viewport->add_child(rotation);
+
 	sphere_instance = memnew(MeshInstance3D);
-	viewport->add_child(sphere_instance);
+	rotation->add_child(sphere_instance);
 
 	box_instance = memnew(MeshInstance3D);
-	viewport->add_child(box_instance);
+	rotation->add_child(box_instance);
 
 	Transform3D box_xform;
 	box_xform.basis.rotate(Vector3(1, 0, 0), Math::deg2rad(25.0));

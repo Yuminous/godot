@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="FastNoiseLite" inherits="Noise" version="4.0">
+	<brief_description>
+		Generates noise using the FastNoiseLite library.
+	</brief_description>
+	<description>
+		This class generates noise using the FastNoiseLite library, which is a collection of several noise algorithms including Cellular, Perlin, Value, and more.
+		Most generated noise values are in the range of [code][-1,1][/code], however not always. Some of the cellular noise algorithms return results above [code]1[/code].
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+		<method name="get_image">
+			<return type="Image" />
+			<argument index="0" name="width" type="int" />
+			<argument index="1" name="height" type="int" />
+			<argument index="2" name="invert" type="bool" default="false" />
+			<description>
+				Returns a 2D [Image] generated from the current noise settings. Images are normalized, with black set to the lowest noise value, and white being the highest value.
+			</description>
+		</method>
+		<method name="get_noise_1d">
+			<return type="float" />
+			<argument index="0" name="x" type="float" />
+			<description>
+				Returns the 1D noise value at the given (x) coordinate. Specifically, it returns the 2D noise value with the (y) coordinate fixed at [code]0.0[/code].
+				Also see [member offset].
+			</description>
+		</method>
+		<method name="get_noise_2d">
+			<return type="float" />
+			<argument index="0" name="x" type="float" />
+			<argument index="1" name="y" type="float" />
+			<description>
+				Returns the 2D noise value at the given position.
+				Also see [member offset].
+			</description>
+		</method>
+		<method name="get_noise_2dv">
+			<return type="float" />
+			<argument index="0" name="v" type="Vector2" />
+			<description>
+				Returns the 2D noise value at the given position.
+				Also see [member offset].
+			</description>
+		</method>
+		<method name="get_noise_3d">
+			<return type="float" />
+			<argument index="0" name="x" type="float" />
+			<argument index="1" name="y" type="float" />
+			<argument index="2" name="z" type="float" />
+			<description>
+				Returns the 3D noise value at the given position.
+				Also see [member offset].
+			</description>
+		</method>
+		<method name="get_noise_3dv">
+			<return type="float" />
+			<argument index="0" name="v" type="Vector3" />
+			<description>
+				Returns the 3D noise value at the given position.
+				Also see [member offset].
+			</description>
+		</method>
+		<method name="get_seamless_image">
+			<return type="Image" />
+			<argument index="0" name="width" type="int" />
+			<argument index="1" name="height" type="int" />
+			<argument index="2" name="invert" type="bool" default="false" />
+			<argument index="3" name="skirt" type="float" default="0.1" />
+			<description>
+				Returns the results of the parent [Noise] get_seamless_image(), which calls [method get_image].
+			</description>
+		</method>
+	</methods>
+	<members>
+		<member name="cellular_dist_func" type="int" setter="set_cellular_distance_function" getter="get_cellular_distance_function" enum="FastNoiseLite.CellularDistanceFunction" default="0">
+			Distance function used in cellular noise calculations. See [enum CellularDistanceFunction].
+		</member>
+		<member name="cellular_jitter" type="float" setter="set_cellular_jitter" getter="get_cellular_jitter" default="0.45">
+			Maximum distance a cellular point can move off of its grid position. Set to [code]0[/code] for an even grid.
+		</member>
+		<member name="cellular_return_type" type="int" setter="set_cellular_return_type" getter="get_cellular_return_type" enum="FastNoiseLite.CellularReturnType" default="0">
+			Return type from cellular noise calculations. See [enum CellularReturnType].
+		</member>
+		<member name="color_ramp" type="Gradient" setter="set_color_ramp" getter="get_color_ramp">
+			A [Gradient] which is used to map the luminance of each pixel to a color value.
+		</member>
+		<member name="domain_warp_amplitude" type="float" setter="set_domain_warp_amplitude" getter="get_domain_warp_amplitude" default="30.0">
+			Sets the maximum warp distance from the origin.
+		</member>
+		<member name="domain_warp_enabled" type="bool" setter="set_domain_warp_enabled" getter="is_domain_warp_enabled" default="false">
+			If enabled, another FastNoiseLite instance is used to warp the space, resulting in a distortion of the noise.
+		</member>
+		<member name="domain_warp_fractal_gain" type="float" setter="set_domain_warp_fractal_gain" getter="get_domain_warp_fractal_gain" default="0.5">
+			Octave gain of the fractal noise which warps the space.
+		</member>
+		<member name="domain_warp_fractal_lacunarity" type="float" setter="set_domain_warp_fractal_lacunarity" getter="get_domain_warp_fractal_lacunarity" default="6.0">
+			Octave lacunarity of the fractal noise which warps the space.
+		</member>
+		<member name="domain_warp_fractal_octaves" type="int" setter="set_domain_warp_fractal_octaves" getter="get_domain_warp_fractal_octaves" default="5">
+			The number of noise layers that are sampled to get the final value for the fractal noise which warps the space.
+		</member>
+		<member name="domain_warp_fractal_type" type="int" setter="set_domain_warp_fractal_type" getter="get_domain_warp_fractal_type" enum="FastNoiseLite.DomainWarpFractalType" default="1">
+			Change the type of fractal mode used to warp the space. See [enum DomainWarpFractalType].
+		</member>
+		<member name="domain_warp_frequency" type="float" setter="set_domain_warp_frequency" getter="get_domain_warp_frequency" default="0.05">
+			Frequency of the noise which warps the space.
+		</member>
+		<member name="domain_warp_type" type="int" setter="set_domain_warp_type" getter="get_domain_warp_type" enum="FastNoiseLite.DomainWarpType" default="0">
+			Sets the warp algorithm. See [enum DomainWarpType].
+		</member>
+		<member name="fractal_gain" type="float" setter="set_fractal_gain" getter="get_fractal_gain" default="0.5">
+			Octave gain for all fractal noise types.
+		</member>
+		<member name="fractal_lacunarity" type="float" setter="set_fractal_lacunarity" getter="get_fractal_lacunarity" default="2.0">
+			Octave lacunarity for all fractal noise types.
+		</member>
+		<member name="fractal_octaves" type="int" setter="set_fractal_octaves" getter="get_fractal_octaves" default="5">
+			The number of noise layers that are sampled to get the final value for fractal noise types.
+		</member>
+		<member name="fractal_ping_pong_strength" type="float" setter="set_fractal_ping_pong_strength" getter="get_fractal_ping_pong_strength" default="2.0">
+			Sets the strength of the fractal ping pong type.
+		</member>
+		<member name="fractal_type" type="int" setter="set_fractal_type" getter="get_fractal_type" enum="FastNoiseLite.FractalType" default="1">
+			Change the type of fractal mode. See [enum FractalType].
+		</member>
+		<member name="fractal_weighted_strength" type="float" setter="set_fractal_weighted_strength" getter="get_fractal_weighted_strength" default="0.0">
+			Higher weighting means higher octaves have less impact if lower octaves have a large impact
+		</member>
+		<member name="frequency" type="float" setter="set_frequency" getter="get_frequency" default="0.01">
+			The frequency for all noise types.
+		</member>
+		<member name="in_3d_space" type="bool" setter="set_in_3d_space" getter="is_in_3d_space" default="false">
+			Determines whether the noise image returned by [method get_image] is calculated in 3d space. May result in reduced contrast.
+		</member>
+		<member name="noise_type" type="int" setter="set_noise_type" getter="get_noise_type" enum="FastNoiseLite.NoiseType" default="1">
+			The noise algorithm used. See [enum NoiseType].
+		</member>
+		<member name="offset" type="Vector3" setter="set_offset" getter="get_offset" default="Vector3(0, 0, 0)">
+			Translate the noise input coordinates by the given [Vector3].
+		</member>
+		<member name="seed" type="int" setter="set_seed" getter="get_seed" default="0">
+			The random number seed for all noise types.
+		</member>
+	</members>
+	<constants>
+		<constant name="TYPE_VALUE" value="5" enum="NoiseType">
+			A lattice of points are assigned random values then interpolated based on neighboring values.
+		</constant>
+		<constant name="TYPE_VALUE_CUBIC" value="4" enum="NoiseType">
+			Similar to Value noise, but slower. Has more variance in peaks and valleys.
+		</constant>
+		<constant name="TYPE_PERLIN" value="3" enum="NoiseType">
+			A lattice of random gradients. Their dot products are interpolated to obtain values in between the lattices.
+		</constant>
+		<constant name="TYPE_CELLULAR" value="2" enum="NoiseType">
+			Cellular includes both Worley noise and Voronoi diagrams which creates various regions of the same value.
+		</constant>
+		<constant name="TYPE_SIMPLEX" value="0" enum="NoiseType">
+			As opposed to [constant TYPE_PERLIN], gradients exist in a simplex lattice rather than a grid lattice, avoiding directional artifacts.
+		</constant>
+		<constant name="TYPE_SIMPLEX_SMOOTH" value="1" enum="NoiseType">
+			Modified, higher quality version of [constant TYPE_SIMPLEX], but slower.
+		</constant>
+		<constant name="FRACTAL_NONE" value="0" enum="FractalType">
+		</constant>
+		<constant name="FRACTAL_FBM" value="1" enum="FractalType">
+		</constant>
+		<constant name="FRACTAL_RIDGED" value="2" enum="FractalType">
+		</constant>
+		<constant name="FRACTAL_PING_PONG" value="3" enum="FractalType">
+		</constant>
+		<constant name="DISTANCE_EUCLIDEAN" value="0" enum="CellularDistanceFunction">
+		</constant>
+		<constant name="DISTANCE_EUCLIDEAN_SQUARED" value="1" enum="CellularDistanceFunction">
+		</constant>
+		<constant name="DISTANCE_MANHATTAN" value="2" enum="CellularDistanceFunction">
+		</constant>
+		<constant name="DISTANCE_HYBRID" value="3" enum="CellularDistanceFunction">
+			Blend of [constant DISTANCE_EUCLIDEAN] and [constant DISTANCE_MANHATTAN] to give curved cell boundaries
+		</constant>
+		<constant name="RETURN_CELL_VALUE" value="0" enum="CellularReturnType">
+		</constant>
+		<constant name="RETURN_DISTANCE" value="1" enum="CellularReturnType">
+		</constant>
+		<constant name="RETURN_DISTANCE2" value="2" enum="CellularReturnType">
+		</constant>
+		<constant name="RETURN_DISTANCE2_ADD" value="3" enum="CellularReturnType">
+		</constant>
+		<constant name="RETURN_DISTANCE2_SUB" value="4" enum="CellularReturnType">
+		</constant>
+		<constant name="RETURN_DISTANCE2_MUL" value="5" enum="CellularReturnType">
+		</constant>
+		<constant name="RETURN_DISTANCE2_DIV" value="6" enum="CellularReturnType">
+		</constant>
+		<constant name="DOMAIN_WARP_SIMPLEX" value="0" enum="DomainWarpType">
+		</constant>
+		<constant name="DOMAIN_WARP_SIMPLEX_REDUCED" value="1" enum="DomainWarpType">
+		</constant>
+		<constant name="DOMAIN_WARP_BASIC_GRID" value="2" enum="DomainWarpType">
+		</constant>
+		<constant name="DOMAIN_WARP_FRACTAL_NONE" value="0" enum="DomainWarpFractalType">
+		</constant>
+		<constant name="DOMAIN_WARP_FRACTAL_PROGRESSIVE" value="1" enum="DomainWarpFractalType">
+		</constant>
+		<constant name="DOMAIN_WARP_FRACTAL_INDEPENDENT" value="2" enum="DomainWarpFractalType">
+		</constant>
+	</constants>
+</class>

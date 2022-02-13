@@ -2688,6 +2688,10 @@ void Viewport::push_input(const Ref<InputEvent> &p_event, bool p_local_coords) {
 		_gui_input_event(ev);
 	}
 
+	if (!is_input_handled()) {
+		push_unhandled_input(ev, true);
+	}
+
 	event_count++;
 }
 

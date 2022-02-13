@@ -194,7 +194,7 @@ private:
 	float volumetric_fog_anisotropy = 0.2;
 	float volumetric_fog_length = 64.0;
 	float volumetric_fog_detail_spread = 2.0;
-	float volumetric_fog_gi_inject = 0.0;
+	float volumetric_fog_gi_inject = 1.0;
 	float volumetric_fog_ambient_inject = false;
 	bool volumetric_fog_temporal_reproject = true;
 	float volumetric_fog_temporal_reproject_amount = 0.9;

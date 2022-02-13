@@ -43,6 +43,7 @@ public:
 	enum ActionMode {
 		ACTION_MODE_BUTTON_PRESS,
 		ACTION_MODE_BUTTON_RELEASE,
+		ACTION_MODE_HYBRID,
 	};
 
 private:
@@ -53,7 +54,7 @@ private:
 	Ref<Shortcut> shortcut;
 	ObjectID shortcut_context;
 
-	ActionMode action_mode = ACTION_MODE_BUTTON_RELEASE;
+	ActionMode action_mode = ACTION_MODE_HYBRID;
 	struct Status {
 		bool pressed = false;
 		bool hovering = false;

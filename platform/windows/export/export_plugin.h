@@ -38,7 +38,7 @@
 #include "platform/windows/logo.gen.h"
 
 class EditorExportPlatformWindows : public EditorExportPlatformPC {
-	void _rcedit_add_data(const Ref<EditorExportPreset> &p_preset, const String &p_path);
+	Error _rcedit_add_data(const Ref<EditorExportPreset> &p_preset, const String &p_path);
 	Error _code_sign(const Ref<EditorExportPreset> &p_preset, const String &p_path);
 
 public:

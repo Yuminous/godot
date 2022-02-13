@@ -1612,20 +1612,61 @@ static bool _find_edited_resources(const Ref<Resource> &p_resource, Set<Ref<Reso
 	}
 
 	List<PropertyInfo> plist;
-
 	p_resource->get_property_list(&plist);
 
 	for (const PropertyInfo &E : plist) {
-		if (E.type == Variant::OBJECT && E.usage & PROPERTY_USAGE_STORAGE && !(E.usage & PROPERTY_USAGE_RESOURCE_NOT_PERSISTENT)) {
-			RES res = p_resource->get(E.name);
-			if (res.is_null()) {
-				continue;
-			}
-			if (res->get_path().is_resource_file()) { // not a subresource, continue
-				continue;
-			}
-			if (_find_edited_resources(res, edited_resources)) {
-				return true;
+		switch (E.type) {
+			case Variant::ARRAY: {
+				Array varray = p_resource->get(E.name);
+				int len = varray.size();
+				for (int i = 0; i < len; i++) {
+					const Variant &variant = varray.get(i);
+
+					if (variant.get_type() == Variant::OBJECT) {
+						RES res = variant;
+						if (res.is_null()) {
+							continue;
+						}
+						if (_find_edited_resources(res, edited_resources)) {
+							return true;
+						}
+					}
+				}
+			} break;
+			case Variant::DICTIONARY: {
+				Dictionary dict = p_resource->get(E.name);
+				List<Variant> keys;
+				dict.get_key_list(&keys);
+
+				for (const Variant &key : keys) {
+					Variant variant = dict[key];
+
+					if (variant.get_type() == Variant::OBJECT) {
+						RES res = variant;
+						if (res.is_null()) {
+							continue;
+						}
+						if (_find_edited_resources(res, edited_resources)) {
+							return true;
+						}
+					}
+				}
+			} break;
+			case Variant::OBJECT: {
+				if (E.usage & PROPERTY_USAGE_STORAGE && !(E.usage & PROPERTY_USAGE_RESOURCE_NOT_PERSISTENT)) {
+					RES res = p_resource->get(E.name);
+					if (res.is_null()) {
+						continue;
+					}
+					if (res->get_path().is_resource_file()) { // not a subresource, continue
+						continue;
+					}
+					if (_find_edited_resources(res, edited_resources)) {
+						return true;
+					}
+				}
+			} break;
+			default: {
 			}
 		}
 	}

@@ -31,10 +31,10 @@
 #ifndef NOISE_TEXTURE_H
 #define NOISE_TEXTURE_H
 
-#include "open_simplex_noise.h"
+#include "noise.h"
 
-#include "core/io/image.h"
 #include "core/object/ref_counted.h"
+#include "scene/resources/texture.h"
 
 class NoiseTexture : public Texture2D {
 	GDCLASS(NoiseTexture, Texture2D);
@@ -51,10 +51,12 @@ private:
 	mutable RID texture;
 	uint32_t flags = 0;
 
-	Ref<OpenSimplexNoise> noise;
+	Ref<Noise> noise;
+	bool invert;
 	Vector2i size = Vector2i(512, 512);
 	Vector2 noise_offset;
 	bool seamless = false;
+	real_t seamless_blend_skirt = 0.1;
 	bool as_normal_map = false;
 	float bump_strength = 8.0;
 
@@ -71,17 +73,20 @@ protected:
 	virtual void _validate_property(PropertyInfo &property) const override;
 
 public:
-	void set_noise(Ref<OpenSimplexNoise> p_noise);
-	Ref<OpenSimplexNoise> get_noise();
+	void set_noise(Ref<Noise> p_noise);
+	Ref<Noise> get_noise();
 
 	void set_width(int p_width);
 	void set_height(int p_height);
 
-	void set_noise_offset(Vector2 p_noise_offset);
-	Vector2 get_noise_offset() const;
+	void set_invert(bool p_invert);
+	bool get_invert() const;
 
 	void set_seamless(bool p_seamless);
 	bool get_seamless();
+
+	void set_seamless_blend_skirt(real_t p_blend_skirt);
+	real_t get_seamless_blend_skirt();
 
 	void set_as_normal_map(bool p_as_normal_map);
 	bool is_normal_map();

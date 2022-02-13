@@ -29,13 +29,16 @@
 /*************************************************************************/
 
 #include "register_types.h"
-#include "noise_texture.h"
-#include "open_simplex_noise.h"
 
-void register_opensimplex_types() {
-	GDREGISTER_CLASS(OpenSimplexNoise);
+#include "fastnoise_lite.h"
+#include "noise.h"
+#include "noise_texture.h"
+
+void register_noise_types() {
 	GDREGISTER_CLASS(NoiseTexture);
+	GDREGISTER_VIRTUAL_CLASS(Noise);
+	GDREGISTER_CLASS(FastNoiseLite);
 }
 
-void unregister_opensimplex_types() {
+void unregister_noise_types() {
 }

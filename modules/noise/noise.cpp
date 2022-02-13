@@ -1,5 +1,5 @@
 /*************************************************************************/
-/*  register_types.h                                                     */
+/*  noise.cpp                                                            */
 /*************************************************************************/
 /*                       This file is part of:                           */
 /*                           GODOT ENGINE                                */
@@ -28,10 +28,28 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 
-#ifndef OPENSIMPLEX_REGISTER_TYPES_H
-#define OPENSIMPLEX_REGISTER_TYPES_H
+#include "noise.h"
 
-void register_opensimplex_types();
-void unregister_opensimplex_types();
+Ref<Image> Noise::get_seamless_image(int p_width, int p_height, bool p_invert, real_t p_blend_skirt) {
+	int skirt_width = p_width * p_blend_skirt;
+	int skirt_height = p_height * p_blend_skirt;
+	int src_width = p_width + skirt_width;
+	int src_height = p_height + skirt_height;
 
-#endif // OPENSIMPLEX_REGISTER_TYPES_H
+	Ref<Image> src = get_image(src_width, src_height, p_invert);
+	bool grayscale = (src->get_format() == Image::FORMAT_L8);
+	if (grayscale) {
+		return _generate_seamless_image<uint8_t>(src, p_width, p_height, p_invert, p_blend_skirt);
+	} else {
+		return _generate_seamless_image<uint32_t>(src, p_width, p_height, p_invert, p_blend_skirt);
+	}
+}
+
+// Template specialization for faster grayscale blending.
+template <>
+uint8_t Noise::_alpha_blend<uint8_t>(uint8_t p_bg, uint8_t p_fg, int p_alpha) const {
+	uint16_t alpha = p_alpha + 1;
+	uint16_t inv_alpha = 256 - p_alpha;
+
+	return (uint8_t)((alpha * p_fg + inv_alpha * p_bg) >> 8);
+}

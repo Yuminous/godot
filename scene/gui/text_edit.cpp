@@ -1520,6 +1520,10 @@ void TextEdit::_notification(int p_what) {
 			}
 			drag_action = false;
 			drag_caret_force_displayed = false;
+			dragging_minimap = false;
+			dragging_selection = false;
+			can_drag_minimap = false;
+			click_select_held->stop();
 		} break;
 	}
 }
@@ -1665,7 +1669,6 @@ void TextEdit::gui_input(const Ref<InputEvent> &p_gui_input) {
 				if (!mb->is_double_click() && (OS::get_singleton()->get_ticks_msec() - last_dblclk) < triple_click_timeout && mb->get_position().distance_to(last_dblclk_pos) < triple_click_tolerance) {
 					// Triple-click select line.
 					selection.selecting_mode = SelectionMode::SELECTION_MODE_LINE;
-					selection.drag_attempt = false;
 					_update_selection_mode_line();
 					last_dblclk = 0;
 				} else if (mb->is_double_click() && text[caret.line].length()) {
@@ -1716,7 +1719,7 @@ void TextEdit::gui_input(const Ref<InputEvent> &p_gui_input) {
 			}
 		} else {
 			if (mb->get_button_index() == MouseButton::LEFT) {
-				if (selection.drag_attempt && is_mouse_over_selection()) {
+				if (selection.drag_attempt && selection.selecting_mode == SelectionMode::SELECTION_MODE_NONE && is_mouse_over_selection()) {
 					selection.active = false;
 				}
 				dragging_minimap = false;
@@ -5865,6 +5868,7 @@ void TextEdit::_click_selection_held() {
 }
 
 void TextEdit::_update_selection_mode_pointer() {
+	selection.drag_attempt = false;
 	dragging_selection = true;
 	Point2 mp = get_local_mouse_pos();
 
@@ -5882,6 +5886,7 @@ void TextEdit::_update_selection_mode_pointer() {
 }
 
 void TextEdit::_update_selection_mode_word() {
+	selection.drag_attempt = false;
 	dragging_selection = true;
 	Point2 mp = get_local_mouse_pos();
 
@@ -5934,6 +5939,7 @@ void TextEdit::_update_selection_mode_word() {
 }
 
 void TextEdit::_update_selection_mode_line() {
+	selection.drag_attempt = false;
 	dragging_selection = true;
 	Point2 mp = get_local_mouse_pos();
 

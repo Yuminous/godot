@@ -74,6 +74,7 @@ def get_opts():
         BoolVariable("use_tsan", "Use LLVM/GCC compiler thread sanitizer (TSAN)", False),
         BoolVariable("use_msan", "Use LLVM compiler memory sanitizer (MSAN)", False),
         BoolVariable("pulseaudio", "Detect and use PulseAudio", True),
+        BoolVariable("sndio", "Detect and use sndio", True),
         BoolVariable("dbus", "Detect and use D-Bus to handle screensaver", True),
         BoolVariable("udev", "Use udev for gamepad connection callbacks", True),
         BoolVariable("x11", "Enable X11 display", True),
@@ -341,6 +342,12 @@ def configure(env):
         env.Append(CPPDEFINES=["ALSA_ENABLED", "ALSAMIDI_ENABLED"])
     else:
         print("Warning: ALSA libraries not found. Disabling the ALSA audio driver.")
+
+    if env["sndio"]:
+        if os.system("pkg-config --exists sndio") == 0:  # 0 means found
+            print("Enabling sndio")
+            env.Append(CPPDEFINES=["SNDIO_ENABLED"])
+            env.ParseConfig("pkg-config --cflags --libs sndio")
 
     if env["pulseaudio"]:
         if os.system("pkg-config --exists libpulse") == 0:  # 0 means found

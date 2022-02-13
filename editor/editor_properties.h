@@ -413,7 +413,7 @@ class EditorPropertyEasing : public EditorProperty {
 	bool setting;
 
 	bool dragging;
-	bool full;
+	bool positive_only;
 	bool flip;
 
 	enum {
@@ -443,7 +443,7 @@ protected:
 
 public:
 	virtual void update_property() override;
-	void setup(bool p_full, bool p_flip);
+	void setup(bool p_positive_only, bool p_flip);
 	EditorPropertyEasing();
 };
 

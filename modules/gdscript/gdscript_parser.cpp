@@ -114,25 +114,25 @@ GDScriptParser::GDScriptParser() {
 	register_annotation(MethodInfo("@icon", { Variant::STRING, "icon_path" }), AnnotationInfo::SCRIPT, &GDScriptParser::icon_annotation);
 	register_annotation(MethodInfo("@onready"), AnnotationInfo::VARIABLE, &GDScriptParser::onready_annotation);
 	// Export annotations.
-	register_annotation(MethodInfo("@export"), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PROPERTY_HINT_NONE, Variant::NIL>);
-	register_annotation(MethodInfo("@export_enum", { Variant::STRING, "names" }), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PROPERTY_HINT_ENUM, Variant::INT>, 0, true);
-	register_annotation(MethodInfo("@export_file", { Variant::STRING, "filter" }), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PROPERTY_HINT_FILE, Variant::STRING>, 1, true);
-	register_annotation(MethodInfo("@export_dir"), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PROPERTY_HINT_DIR, Variant::STRING>);
-	register_annotation(MethodInfo("@export_global_file", { Variant::STRING, "filter" }), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PROPERTY_HINT_GLOBAL_FILE, Variant::STRING>, 1, true);
-	register_annotation(MethodInfo("@export_global_dir"), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PROPERTY_HINT_GLOBAL_DIR, Variant::STRING>);
-	register_annotation(MethodInfo("@export_multiline"), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PROPERTY_HINT_MULTILINE_TEXT, Variant::STRING>);
-	register_annotation(MethodInfo("@export_placeholder"), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PROPERTY_HINT_PLACEHOLDER_TEXT, Variant::STRING>);
-	register_annotation(MethodInfo("@export_range", { Variant::FLOAT, "min" }, { Variant::FLOAT, "max" }, { Variant::FLOAT, "step" }, { Variant::STRING, "slider1" }, { Variant::STRING, "slider2" }), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PROPERTY_HINT_RANGE, Variant::FLOAT>, 3);
-	register_annotation(MethodInfo("@export_exp_easing", { Variant::STRING, "hint1" }, { Variant::STRING, "hint2" }), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PROPERTY_HINT_EXP_EASING, Variant::FLOAT>, 2);
-	register_annotation(MethodInfo("@export_color_no_alpha"), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PROPERTY_HINT_COLOR_NO_ALPHA, Variant::COLOR>);
-	register_annotation(MethodInfo("@export_node_path", { Variant::STRING, "type" }), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PROPERTY_HINT_NODE_PATH_VALID_TYPES, Variant::NODE_PATH>, 1, true);
-	register_annotation(MethodInfo("@export_flags", { Variant::STRING, "names" }), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PROPERTY_HINT_FLAGS, Variant::INT>, 0, true);
-	register_annotation(MethodInfo("@export_flags_2d_render"), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PROPERTY_HINT_LAYERS_2D_RENDER, Variant::INT>);
-	register_annotation(MethodInfo("@export_flags_2d_physics"), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PROPERTY_HINT_LAYERS_2D_PHYSICS, Variant::INT>);
-	register_annotation(MethodInfo("@export_flags_2d_navigation"), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PROPERTY_HINT_LAYERS_2D_NAVIGATION, Variant::INT>);
-	register_annotation(MethodInfo("@export_flags_3d_render"), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PROPERTY_HINT_LAYERS_3D_RENDER, Variant::INT>);
-	register_annotation(MethodInfo("@export_flags_3d_physics"), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PROPERTY_HINT_LAYERS_3D_PHYSICS, Variant::INT>);
-	register_annotation(MethodInfo("@export_flags_3d_navigation"), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PROPERTY_HINT_LAYERS_3D_NAVIGATION, Variant::INT>);
+	register_annotation(MethodInfo("@export"), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotation);
+	register_annotation(MethodInfo("@export_enum", { Variant::STRING, "names" }), AnnotationInfo::VARIABLE, &GDScriptParser::typed_export_annotations<PROPERTY_HINT_ENUM, Variant::INT, Variant::FLOAT, Variant::STRING>, 0, true);
+	register_annotation(MethodInfo("@export_file", { Variant::STRING, "filter" }), AnnotationInfo::VARIABLE, &GDScriptParser::typed_export_annotations<PROPERTY_HINT_FILE, Variant::STRING>, 1, true);
+	register_annotation(MethodInfo("@export_dir"), AnnotationInfo::VARIABLE, &GDScriptParser::typed_export_annotations<PROPERTY_HINT_DIR, Variant::STRING>);
+	register_annotation(MethodInfo("@export_global_file", { Variant::STRING, "filter" }), AnnotationInfo::VARIABLE, &GDScriptParser::typed_export_annotations<PROPERTY_HINT_GLOBAL_FILE, Variant::STRING>, 1, true);
+	register_annotation(MethodInfo("@export_global_dir"), AnnotationInfo::VARIABLE, &GDScriptParser::typed_export_annotations<PROPERTY_HINT_GLOBAL_DIR, Variant::STRING>);
+	register_annotation(MethodInfo("@export_multiline"), AnnotationInfo::VARIABLE, &GDScriptParser::typed_export_annotations<PROPERTY_HINT_MULTILINE_TEXT, Variant::STRING>);
+	register_annotation(MethodInfo("@export_placeholder"), AnnotationInfo::VARIABLE, &GDScriptParser::typed_export_annotations<PROPERTY_HINT_PLACEHOLDER_TEXT, Variant::STRING>);
+	register_annotation(MethodInfo("@export_range", { Variant::FLOAT, "min" }, { Variant::FLOAT, "max" }, { Variant::FLOAT, "step" }, { Variant::STRING, "slider1" }, { Variant::STRING, "slider2" }), AnnotationInfo::VARIABLE, &GDScriptParser::typed_export_annotations<PROPERTY_HINT_RANGE, Variant::FLOAT, Variant::INT>, 3);
+	register_annotation(MethodInfo("@export_exp_easing", { Variant::STRING, "hint1" }, { Variant::STRING, "hint2" }), AnnotationInfo::VARIABLE, &GDScriptParser::typed_export_annotations<PROPERTY_HINT_EXP_EASING, Variant::FLOAT, Variant::INT>, 2);
+	register_annotation(MethodInfo("@export_color_no_alpha"), AnnotationInfo::VARIABLE, &GDScriptParser::typed_export_annotations<PROPERTY_HINT_COLOR_NO_ALPHA, Variant::COLOR>);
+	register_annotation(MethodInfo("@export_node_path", { Variant::STRING, "type" }), AnnotationInfo::VARIABLE, &GDScriptParser::typed_export_annotations<PROPERTY_HINT_NODE_PATH_VALID_TYPES, Variant::NODE_PATH>, 1, true);
+	register_annotation(MethodInfo("@export_flags", { Variant::STRING, "names" }), AnnotationInfo::VARIABLE, &GDScriptParser::typed_export_annotations<PROPERTY_HINT_FLAGS, Variant::INT, Variant::FLOAT>, 0, true);
+	register_annotation(MethodInfo("@export_flags_2d_render"), AnnotationInfo::VARIABLE, &GDScriptParser::typed_export_annotations<PROPERTY_HINT_LAYERS_2D_RENDER, Variant::INT, Variant::FLOAT>);
+	register_annotation(MethodInfo("@export_flags_2d_physics"), AnnotationInfo::VARIABLE, &GDScriptParser::typed_export_annotations<PROPERTY_HINT_LAYERS_2D_PHYSICS, Variant::INT, Variant::FLOAT>);
+	register_annotation(MethodInfo("@export_flags_2d_navigation"), AnnotationInfo::VARIABLE, &GDScriptParser::typed_export_annotations<PROPERTY_HINT_LAYERS_2D_NAVIGATION, Variant::INT, Variant::FLOAT>);
+	register_annotation(MethodInfo("@export_flags_3d_render"), AnnotationInfo::VARIABLE, &GDScriptParser::typed_export_annotations<PROPERTY_HINT_LAYERS_3D_RENDER, Variant::INT, Variant::FLOAT>);
+	register_annotation(MethodInfo("@export_flags_3d_physics"), AnnotationInfo::VARIABLE, &GDScriptParser::typed_export_annotations<PROPERTY_HINT_LAYERS_3D_PHYSICS, Variant::INT, Variant::FLOAT>);
+	register_annotation(MethodInfo("@export_flags_3d_navigation"), AnnotationInfo::VARIABLE, &GDScriptParser::typed_export_annotations<PROPERTY_HINT_LAYERS_3D_NAVIGATION, Variant::INT, Variant::FLOAT>);
 	register_annotation(MethodInfo("@warning_ignore", { Variant::STRING, "warning" }), AnnotationInfo::CLASS | AnnotationInfo::VARIABLE | AnnotationInfo::SIGNAL | AnnotationInfo::CONSTANT | AnnotationInfo::FUNCTION | AnnotationInfo::STATEMENT, &GDScriptParser::warning_annotations, 0, true);
 	// Networking.
 	register_annotation(MethodInfo("@rpc", { Variant::STRING, "mode" }, { Variant::STRING, "sync" }, { Variant::STRING, "transfer_mode" }, { Variant::INT, "transfer_channel" }), AnnotationInfo::FUNCTION, &GDScriptParser::network_annotations<Multiplayer::RPC_MODE_AUTHORITY>, 4, true);
@@ -3475,8 +3475,96 @@ bool GDScriptParser::onready_annotation(const AnnotationNode *p_annotation, Node
 	return true;
 }
 
-template <PropertyHint t_hint, Variant::Type t_type>
-bool GDScriptParser::export_annotations(const AnnotationNode *p_annotation, Node *p_node) {
+bool GDScriptParser::export_annotation(const AnnotationNode *p_annotation, Node *p_node) {
+	ERR_FAIL_COND_V_MSG(p_node->type != Node::VARIABLE, false, vformat(R"("%s" annotation can only be applied to variables.)", p_annotation->name));
+
+	VariableNode *variable = static_cast<VariableNode *>(p_node);
+	if (variable->exported) {
+		push_error(vformat(R"(Annotation "%s" cannot be used with another "@export" annotation.)", p_annotation->name), p_annotation);
+		return false;
+	}
+
+	variable->exported = true;
+
+	variable->export_info.type = Variant::NIL;
+	variable->export_info.hint = PROPERTY_HINT_NONE;
+	variable->export_info.hint_string = "";
+
+	// This is called after the analyzer is done finding the type, so this should be set here.
+	DataType export_type = variable->get_datatype();
+
+	if (variable->datatype_specifier == nullptr && variable->initializer == nullptr) {
+		push_error(R"(Cannot use simple "@export" annotation with variable without type or initializer, since type can't be inferred.)", p_annotation);
+		return false;
+	}
+
+	bool is_array = false;
+
+	if (export_type.builtin_type == Variant::ARRAY && export_type.has_container_element_type()) {
+		export_type = export_type.get_container_element_type(); // Use inner type for.
+		is_array = true;
+	}
+
+	if (export_type.is_variant() || export_type.has_no_type()) {
+		push_error(R"(Cannot use simple "@export" annotation because the type of the initialized value can't be inferred.)", p_annotation);
+		return false;
+	}
+
+	switch (export_type.kind) {
+		case GDScriptParser::DataType::BUILTIN:
+			variable->export_info.type = export_type.builtin_type;
+			variable->export_info.hint = PROPERTY_HINT_NONE;
+			variable->export_info.hint_string = Variant::get_type_name(export_type.builtin_type);
+			break;
+		case GDScriptParser::DataType::NATIVE:
+			if (ClassDB::is_parent_class(export_type.native_type, SNAME("Resource"))) {
+				variable->export_info.type = Variant::OBJECT;
+				variable->export_info.hint = PROPERTY_HINT_RESOURCE_TYPE;
+				variable->export_info.hint_string = export_type.native_type;
+			} else {
+				push_error(R"(Export type can only be built-in, a resource, or an enum.)", variable);
+				return false;
+			}
+			break;
+		case GDScriptParser::DataType::ENUM: {
+			variable->export_info.type = Variant::INT;
+			variable->export_info.hint = PROPERTY_HINT_ENUM;
+
+			String enum_hint_string;
+			for (OrderedHashMap<StringName, int>::Element E = export_type.enum_values.front(); E; E = E.next()) {
+				enum_hint_string += E.key().operator String().capitalize().xml_escape();
+				enum_hint_string += ":";
+				enum_hint_string += String::num_int64(E.value()).xml_escape();
+
+				if (E.next()) {
+					enum_hint_string += ",";
+				}
+			}
+
+			variable->export_info.hint_string = enum_hint_string;
+		} break;
+		default:
+			// TODO: Allow custom user resources.
+			push_error(R"(Export type can only be built-in, a resource, or an enum.)", variable);
+			break;
+	}
+
+	if (is_array) {
+		String hint_prefix = itos(variable->export_info.type);
+		if (variable->export_info.hint) {
+			hint_prefix += "/" + itos(variable->export_info.hint);
+		}
+		variable->export_info.hint = PROPERTY_HINT_TYPE_STRING;
+		variable->export_info.hint_string = hint_prefix + ":" + variable->export_info.hint_string;
+		variable->export_info.type = Variant::ARRAY;
+	}
+
+	return true;
+}
+
+// t_type is the expected type, t_convertable_type or t_alternative_type also works, the latter would also be set as export_info.type
+template <PropertyHint t_hint, Variant::Type t_type, Variant::Type t_convertable_type, Variant::Type t_alternative_type>
+bool GDScriptParser::typed_export_annotations(const AnnotationNode *p_annotation, Node *p_node) {
 	ERR_FAIL_COND_V_MSG(p_node->type != Node::VARIABLE, false, vformat(R"("%s" annotation can only be applied to variables.)", p_annotation->name));
 
 	VariableNode *variable = static_cast<VariableNode *>(p_node);
@@ -3503,80 +3591,20 @@ bool GDScriptParser::export_annotations(const AnnotationNode *p_annotation, Node
 	// This is called after the analyzer is done finding the type, so this should be set here.
 	DataType export_type = variable->get_datatype();
 
-	if (p_annotation->name == SNAME("@export")) {
-		if (variable->datatype_specifier == nullptr && variable->initializer == nullptr) {
-			push_error(R"(Cannot use simple "@export" annotation with variable without type or initializer, since type can't be inferred.)", p_annotation);
+	// Validate variable type with export.
+	if (!export_type.is_variant() && (export_type.kind != DataType::BUILTIN || export_type.builtin_type != t_type)) {
+		// Check for alternative or convertable types:
+		if (export_type.builtin_type == t_alternative_type) {
+			variable->export_info.type = t_alternative_type;
+		} else if (export_type.builtin_type == t_convertable_type) {
+			// convertable type (usually int <-> float) is ok
+		} else {
+			String alternative = t_alternative_type == Variant::VARIANT_MAX ? "" : vformat(R"( or "%s")", Variant::get_type_name(t_alternative_type));
+			String convertable = t_convertable_type == Variant::VARIANT_MAX ? "" : vformat(R"( or "%s")", Variant::get_type_name(t_convertable_type));
+			push_error(vformat(R"("%s" annotation requires a variable of type "%s"%s%s but type "%s" was given instead.)",
+							   p_annotation->name.operator String(), Variant::get_type_name(t_type), alternative, convertable, export_type.to_string()),
+					variable);
 			return false;
-		}
-
-		bool is_array = false;
-
-		if (export_type.builtin_type == Variant::ARRAY && export_type.has_container_element_type()) {
-			export_type = export_type.get_container_element_type(); // Use inner type for.
-			is_array = true;
-		}
-
-		if (export_type.is_variant() || export_type.has_no_type()) {
-			push_error(R"(Cannot use simple "@export" annotation because the type of the initialized value can't be inferred.)", p_annotation);
-			return false;
-		}
-
-		switch (export_type.kind) {
-			case GDScriptParser::DataType::BUILTIN:
-				variable->export_info.type = export_type.builtin_type;
-				variable->export_info.hint = PROPERTY_HINT_NONE;
-				variable->export_info.hint_string = Variant::get_type_name(export_type.builtin_type);
-				break;
-			case GDScriptParser::DataType::NATIVE:
-				if (ClassDB::is_parent_class(export_type.native_type, SNAME("Resource"))) {
-					variable->export_info.type = Variant::OBJECT;
-					variable->export_info.hint = PROPERTY_HINT_RESOURCE_TYPE;
-					variable->export_info.hint_string = export_type.native_type;
-				} else {
-					push_error(R"(Export type can only be built-in, a resource, or an enum.)", variable);
-					return false;
-				}
-				break;
-			case GDScriptParser::DataType::ENUM: {
-				variable->export_info.type = Variant::INT;
-				variable->export_info.hint = PROPERTY_HINT_ENUM;
-
-				String enum_hint_string;
-				for (OrderedHashMap<StringName, int>::Element E = export_type.enum_values.front(); E; E = E.next()) {
-					enum_hint_string += E.key().operator String().capitalize().xml_escape();
-					enum_hint_string += ":";
-					enum_hint_string += String::num_int64(E.value()).xml_escape();
-
-					if (E.next()) {
-						enum_hint_string += ",";
-					}
-				}
-
-				variable->export_info.hint_string = enum_hint_string;
-			} break;
-			default:
-				// TODO: Allow custom user resources.
-				push_error(R"(Export type can only be built-in, a resource, or an enum.)", variable);
-				break;
-		}
-
-		if (is_array) {
-			String hint_prefix = itos(variable->export_info.type);
-			if (variable->export_info.hint) {
-				hint_prefix += "/" + itos(variable->export_info.hint);
-			}
-			variable->export_info.hint = PROPERTY_HINT_TYPE_STRING;
-			variable->export_info.hint_string = hint_prefix + ":" + variable->export_info.hint_string;
-			variable->export_info.type = Variant::ARRAY;
-		}
-	} else {
-		// Validate variable type with export.
-		if (!export_type.is_variant() && (export_type.kind != DataType::BUILTIN || export_type.builtin_type != t_type)) {
-			// Allow float/int conversion.
-			if ((t_type != Variant::FLOAT || export_type.builtin_type != Variant::INT) && (t_type != Variant::INT || export_type.builtin_type != Variant::FLOAT)) {
-				push_error(vformat(R"("%s" annotation requires a variable of type "%s" but type "%s" was given instead.)", p_annotation->name.operator String(), Variant::get_type_name(t_type), export_type.to_string()), variable);
-				return false;
-			}
 		}
 	}
 
